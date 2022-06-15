@@ -219,3 +219,7 @@ Products
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+.hide-product {
+  display: none;
+}

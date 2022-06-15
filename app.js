@@ -96,3 +96,93 @@ const products = [
     price: 9.99,
   },
 ];
+//  variables from our html
+const btns = document.querySelector(".companies");
+const articles = document.querySelector(".products-container");
+const form = document.querySelector(".input-form");
+
+// =====when page load all items display============
+window.addEventListener("DOMContentLoaded", function () {
+  displayGallery(products);
+  displayBtn();
+});
+
+// =========display gallery  global function =======
+function displayGallery(arr) {
+  let displayGallery = arr
+    .map(function (item) {
+      return ` <article class="product">
+        <img
+          src= ${item.image}
+          class="product-img img"
+          alt=""
+        />
+        <footer>
+          <h5 class="product-name">${item.title}</h5>
+          <span class="product-price">${item.price}</span>
+        </footer>
+      </article>`;
+    })
+    .join(" ");
+  articles.innerHTML = displayGallery;
+}
+
+// =========display Btn ==========
+function displayBtn() {
+  const btnCategory = products.reduce(
+    function (values, item) {
+      if (!values.includes(item.company)) {
+        values.push(item.company);
+      }
+      return values;
+    },
+    ["all"]
+  );
+  let displayBtn = btnCategory
+    .map(function (company) {
+      return `<button class="company-btn">${company}</button>`;
+    })
+    .join("");
+  btns.innerHTML = displayBtn;
+
+  const companies = document.querySelectorAll(".company-btn");
+  companies.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      // we filter our array depend on our btn text content and then display thin new array in our global function
+      let selectedItems = products.filter(function (item) {
+        if (item.company === btn.textContent) {
+          return item;
+        }
+      });
+      displayGallery(selectedItems);
+
+      //   if we click all we want to display our original array
+      if (btn.textContent === "all") {
+        displayGallery(products);
+      }
+    });
+  });
+}
+const input = document.querySelector(".search-input");
+// ======= form submit ==========
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  if (input.value !== products.company) {
+    articles.innerHTML = `<p>sorry no products matched your search</p>`;
+  }
+});
+
+function liveSearch() {
+  let article = document.querySelectorAll(".product");
+  // let productName = document.querySelectorAll('.product-name')
+  let filter = input.value.toUpperCase();
+
+  for (let i = 0; i < article.length; i++) {
+    if (article[i].textContent.toUpperCase().includes(filter)) {
+      console.log(article[i]);
+      article[i].classList.remove("hide-product");
+    } else {
+      article[i].classList.add("hide-product");
+    }
+  }
+}
